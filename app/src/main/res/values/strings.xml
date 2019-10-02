@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Flutter</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="begin_text">Start</string>
+    <string name="config_text">Settings</string>
+    <string name="ranging_status">Ranging...</string>
+</resources>
