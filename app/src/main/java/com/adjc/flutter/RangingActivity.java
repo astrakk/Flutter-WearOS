@@ -52,18 +52,21 @@ public class RangingActivity extends Activity implements BeaconConsumer {
                 textView_beacons.setText("Beacons in range: " + nearbyBeacons);
 
                 // Define the testing vibration pattern
-                long[] vibrationPattern = {0, 500, 50, 300};
+                long[] vibrationPattern = {0, 500, 25, 50, 25, 50};
+
 
                 // Iterate over all beacons, logging their distances
                 for (Beacon beacon: beacons) {
-                    Log.println(Log.INFO, TAG, "Distance is " + beacon.getDistance() * 10.0);
-
+                    nearbyBeacons++;
                     // If beacon is within 0.5 metres, vibrate and display on screen
                     if (beacon.getDistance() * 10.0 < 0.5) {
-                        nearbyBeacons++;
+                        //nearbyBeacons++;
                         textView_beacons.setText("Beacons in range: " + nearbyBeacons);
                         vibrator.vibrate(vibrationPattern, -1);
                     }
+
+                    Log.println(Log.INFO, TAG, "Distance is " + beacon.getDistance() * 10.0);
+                    Log.println(Log.INFO, TAG, "ID is: " + beacon.getBluetoothAddress() + " (" + nearbyBeacons + ")");
                 }
             }
         });
@@ -73,6 +76,7 @@ public class RangingActivity extends Activity implements BeaconConsumer {
             // Reduce the sample size from 20s to 5s. Reduces accuracy but improves speed.
             BeaconManager.setRssiFilterImplClass(RunningAverageRssiFilter.class);
             RunningAverageRssiFilter.setSampleExpirationMilliseconds(5000l);
+            Beacon.setHardwareEqualityEnforced(true);
         } catch (RemoteException e) {    }
     }
 }
