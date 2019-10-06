@@ -46,35 +46,36 @@ public class RangingActivity extends Activity implements BeaconConsumer {
                 // Initialize the vibrator device
                 Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
+                // Get the known beacon hardware IDs
+                String beacon0Id = MainActivity.configs.getBeacon0Id();
+                String beacon1Id = MainActivity.configs.getBeacon1Id();
+
                 // Reset the nearby beacons counter
                 int nearbyBeacons = 0;
                 TextView textView_beacons = findViewById(R.id.textView_beacons);
                 textView_beacons.setText("Beacons in range: " + nearbyBeacons);
 
-                // Define the testing vibration pattern
-                long[] vibrationPattern = {0, 500, 25, 50, 25, 50};
-
-
                 // Iterate over all beacons, logging their distances
                 for (Beacon beacon: beacons) {
-                    nearbyBeacons++;
+                    // Store the detected beacon's hardware ID for comparison with known beacons
+                    String detectedBeaconId = beacon.getBluetoothAddress();
+
                     // If beacon is within 0.5 metres, vibrate and display on screen
                     if (beacon.getDistance() * 10.0 < 0.5) {
-                        String test = beacon.getBluetoothAddress();
-                        String test2 = MainActivity.configs.getBeacon0Id();
+                        // Increment the nearby beacons value. Useful for detected unknown beacons as well.
+                        nearbyBeacons++;
 
-                        if (test.compareTo(test2) == 0) {
-                            Log.println(Log.INFO,TAG, "AAAAAAAAAAAAAA THE ID MATCHEC AAAAAAAAAAA:    " + MainActivity.configs.getBeacon0VibrationId());
+                        // Compare the hardware ID of the detected beacon with known ones, vibrating appropriately
+                        if (detectedBeaconId.compareTo(beacon0Id) == 0) {
+                            vibrator.vibrate(MainActivity.configs.getBeacon0VibrationPattern(), -1);
+                        }
+                        else if (detectedBeaconId.compareTo(beacon1Id) == 0) {
+                            vibrator.vibrate(MainActivity.configs.getBeacon1VibrationPattern(), -1);
                         }
 
-                        Log.println(Log.INFO, TAG, "HERE IS THE LINE: " + MainActivity.configs.getBeacon0Id());
-                        //nearbyBeacons++;
+                        // Update the text on screen to represent the number of beacons nearby
                         textView_beacons.setText("Beacons in range: " + nearbyBeacons);
-                        vibrator.vibrate(vibrationPattern, -1);
                     }
-
-                    Log.println(Log.INFO, TAG, "Distance is " + beacon.getDistance() * 10.0);
-                    Log.println(Log.INFO, TAG, "ID is: " + beacon.getBluetoothAddress() + " (" + nearbyBeacons + ")");
                 }
             }
         });
@@ -84,6 +85,8 @@ public class RangingActivity extends Activity implements BeaconConsumer {
             // Reduce the sample size from 20s to 5s. Reduces accuracy but improves speed.
             BeaconManager.setRssiFilterImplClass(RunningAverageRssiFilter.class);
             RunningAverageRssiFilter.setSampleExpirationMilliseconds(5000l);
+
+            // Register beacons by hardware ID instead of UUID (thanks Apple...)
             Beacon.setHardwareEqualityEnforced(true);
         } catch (RemoteException e) {    }
     }
