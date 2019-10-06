@@ -11,7 +11,7 @@ public class ConfigurationClass {
     private String beacon1Id;
 
     // Define the vibration patterns list
-    public List<long[]> vibrationPatterns = new ArrayList<long[]>();
+    private List<long[]> vibrationPatterns = new ArrayList<long[]>();
 
     private long[] pattern0 = {0, 500, 50, 300};
     private long[] pattern1 = {0, 200, 25, 200, 25, 500};
@@ -33,6 +33,29 @@ public class ConfigurationClass {
         vibrationPatterns.add(pattern3);
         vibrationPatterns.add(pattern4);
     }
+
+    public List<long[]> getVibrationPatterns() {
+        return vibrationPatterns;
+    }
+
+    public int getVibrationPatternCount() {
+        return vibrationPatterns.size();
+    }
+
+    public long[] getVibrationPattern(int vibrationId) {
+        return vibrationPatterns.get(vibrationId);
+    }
+
+    public List<String> getVibrationPatternsArrayPretty(){
+        List<String> prettyArray = new ArrayList<>();
+
+        for (int i = 0; i < getVibrationPatternCount(); i++) {
+            prettyArray.add("Vibration #" + i);
+        }
+
+        return prettyArray;
+    }
+
 
     public String getBeacon0Id() {
         return beacon0Id;
