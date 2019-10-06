@@ -60,6 +60,14 @@ public class RangingActivity extends Activity implements BeaconConsumer {
                     nearbyBeacons++;
                     // If beacon is within 0.5 metres, vibrate and display on screen
                     if (beacon.getDistance() * 10.0 < 0.5) {
+                        String test = beacon.getBluetoothAddress();
+                        String test2 = MainActivity.configs.getBeacon0Id();
+
+                        if (test.compareTo(test2) == 0) {
+                            Log.println(Log.INFO,TAG, "AAAAAAAAAAAAAA THE ID MATCHEC AAAAAAAAAAA:    " + MainActivity.configs.getBeacon0VibrationId());
+                        }
+
+                        Log.println(Log.INFO, TAG, "HERE IS THE LINE: " + MainActivity.configs.getBeacon0Id());
                         //nearbyBeacons++;
                         textView_beacons.setText("Beacons in range: " + nearbyBeacons);
                         vibrator.vibrate(vibrationPattern, -1);
